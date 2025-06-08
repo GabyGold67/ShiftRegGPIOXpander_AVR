@@ -255,8 +255,8 @@ bool ShiftRegGPIOXpander::digitalWriteSrMaskSet(uint8_t* setMask){
          moveAuxToMain();
       for (int ptrInc{0}; ptrInc < _srQty; ptrInc++)
          *(_mainBuffrArryPtr + ptrInc) |= *(localSetMask + ptrInc);
-         delete [] localSetMask;
-         result = _sendAllSRCntnt();
+      delete [] localSetMask;
+      result = _sendAllSRCntnt();
    }
 
    return result;
@@ -571,7 +571,6 @@ uint16_t SRGXVPort::getVPortMaxVal(){
 
 uint16_t SRGXVPort::readPort(){
    uint16_t portVal{0};
-   bool result{false};
 
    if(_SRGXPtr != nullptr)
       _SRGXPtr->digitalReadSgmntSr(_strtPin, _pinsQty, portVal);

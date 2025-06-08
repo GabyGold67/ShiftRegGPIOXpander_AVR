@@ -1,6 +1,6 @@
-# GPIO Digital Outputs Expander Library (ShiftRegGPIOXpander_ESP32)  
+# GPIO Digital Outputs Expander Library (ShiftRegGPIOXpander_AVR)  
 
-## [Complete library documentation HERE!](https://gabygold67.github.io/ShiftRegGPIOXpander_ESP32/)
+## [Complete library documentation HERE!](https://gabygold67.github.io/ShiftRegGPIOXpander_AVR/)
 
 ## The main concepts driving this development are:
    - Easy output pins addition to a project without making substantial changes to the standard programming practices referring to output pin values writes and reads.  
@@ -35,4 +35,4 @@ You then have a plethora of methods to use for managing the **ShiftRegGPIOXpande
 
 ---  
    **Note:**  
-   I will agree with anybody who catalogs this as a **YAUSRL** (Yet Another Unneeded Shift Register Library). The thing is I tried to find an adequate library for my project but I failed to find something I felt comfortable working with. As a matter of fact I forked a repository, and after starting to modify it I ended up scrapping the old base concept and started a new structure, using the old code scraps where it was consistent with the new concept, rewriting the rest. As a matter of fact this repository will still be a fork of the original library for it was a source: of **code** when it fitted my vision, of **inspiration** when I considered it was outside my vision of the solution concept. The original library repository is at [ShiftRegister74HC595](https://github.com/Simsso/ShiftRegister74HC595).
+   I will agree with anybody who catalogs this as a **YAUSRL** (Yet Another Unneeded Shift Register Library). The thing is I tried to find an adequate library for my project but I failed to find something I felt comfortable working with. 

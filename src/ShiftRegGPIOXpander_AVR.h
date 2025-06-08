@@ -1,14 +1,14 @@
 /**
  ******************************************************************************
- * @file ShiftRegGPIOXpander_ESP32.h
- * @brief Header file for the ShiftRegGPIOXtender_ESP32 library 
+ * @file ShiftRegGPIOXpander_AVR.h
+ * @brief Header file for the ShiftRegGPIOXtender_AVR library 
  * 
- * @details The library provides the means to extend the GPIO available pins -**for digital output only**- by providing a pin output manipulation API similar to the provided by Arduino, for it's own GPIO pins, for shift registers attached to the controller. The class and related definitions are provided for 74HCx595 shift registers connected to the MCU by the required three pins for the first chip, daisy-chained to other similar chips as much as needed and technically supported (please read the datasheet of the selected model for references about those limits).
+ * @details The library provides the means to extend the GPIO available pins -**for digital output only**- by providing a pin output manipulation API similar to the provided by Arduino for it's own GPIO pins, for shift registers attached to the controller. The class and related definitions are provided for 74HCx595 shift registers connected to the MCU by the required three pins for the first chip, daisy-chained to other similar chips as much as needed and technically supported (please read the datasheet of the selected model for references about those limits).
  * 
- * Repository: https://github.com/GabyGold67/ShiftRegGPIOXpander_ESP32
+ * Repository: https://github.com/GabyGold67/ShiftRegGPIOXpander_AVR
  * 
  * Framework: Arduino  
- * Platform: ESP32  
+ * Platform: * (Any platform not requiring multithreading guards)  
  * 
  * @author Gabriel D. Goldman  
  * mail <gdgoldman67@hotmail.com>  
@@ -17,7 +17,7 @@
  * @version 3.0.0
  * 
  * @date First release: 12/02/2025  
- *       Last update:   07/06/2025 10:40 (GMT+0200) DST  
+ *       Last update:   08/06/2025 18:40 (GMT+0200) DST  
  * 
  * @copyright Copyright (c) 2025  GPL-3.0 license
  *******************************************************************************
@@ -50,7 +50,7 @@ class SRGXVPort;
 /**
  * @brief A class that models a GPIO outputs pins expander through the use of 8-bits Serial In Paralell Out (SIPO) shift registers
  * 
- * The GPIO pins expansion modeled adds digital output pins managed by the use of an API similar to the built in Arduino platform tools. As the hardware is built using daisy-chained 74HCx595 shift registers, the connection pins to the hardware are needed as parameters to build the object, as is the number of shift registers daisy-chain connected is needed.  
+ * The GPIO pins expansion modeled adds digital output pins managed by the use of an API similar to the built in Arduino platform tools. As the hardware is built using daisy-chained 74HCx595 shift registers, the connection pins to the first shift register are needed as parameters to build the object, as is the number of shift registers daisy-chain connected.  
  * 
  * Being those three parameters hardware construction related, no mechanisms are provided to modify them after the object is created.
  * 
@@ -78,7 +78,7 @@ private:
    /**
     * @brief Sends the content of a single byte to a Shift Register. 
     * 
-    * The method's action is limited to filling the shift register's internal buffer, but it does not latch it (it does not set the output pins of the shfit register to the buffered value). The latching must be done by the calling party, when the contents of all the shift registers are set to the desired values. The usual calling of this method is done by the _sendAllSRCntnt() method, which will flush the contents of the Main Buffer to the shift registers array.  
+    * The method's action is limited to filling a single shift register's internal buffer, but it does not latch it (it does not set the output pins of the shfit register to the buffered value). The latching must be done by the calling party, when the contents of all the shift registers are set to the desired values. The usual calling of this method is done by the _sendAllSRCntnt() method, which will flush the contents of the Main Buffer to the shift registers array.  
     * 
     * @param data The byte to be sent to the shift register, the bits in the byte will be sent in the order from MSB to LSB (MSB First). 
     * 
@@ -87,10 +87,12 @@ private:
    bool _sendSnglSRCntnt(const uint8_t &data); 
 
 protected:
-   uint8_t* _mainBuffrArryPtr{};
-   uint8_t* _auxBuffrArryPtr{nullptr};
-   uint8_t _maxSRGXPin{};
    uint8_t _srQty{};
+   uint8_t* _mainBuffrArryPtr{};
+   uint8_t _maxSRGXPin{};
+   uint8_t* _auxBuffrArryPtr{nullptr};
+
+   bool _begun{false};
 
 public:
    /**
@@ -107,9 +109,9 @@ public:
     * @param st_cp MCU GPIO pin connected to the ST_CP pin -a.k.a. storage register clock input- to set (latch) the output pins from the internal buffer of the expander
     * @param srQty Optional parameter. Quantity of shift registers set in daisy-chain configuration composing the expander.
     * 
-    * @note The object will create a dynamic array to buffer the information written to the shift registers, it will be referred to as the **Main Buffer**, **the Buffer** or **the Main**.  
-    * The action of sending the Buffer contents to the shift registers array will be reffered as **Flushing**. Every time the Buffer is **flushed** to the shift registers array the whole contents of that array will be sent.  
-    * A secondary dynamic array will be created for delayed operations purposes, that buffer will be referred to as the **Auxiliary Buffer** or **the Auxiliary**. The Auxiliary will be created every time it's needed and destroyed after it's temporary use becomes unnecessary. The Auxiliary will be used to allow several bit changing operations without the need of flushing the whole buffer for each bit change. The usual propper use of the mechanism will make all the bits changes that occur simultaneously to the Auxiliary Buffer and then **moving** the Auxiliary Buffer to the Main Buffer and flushing the Buffer.  
+    * @note The object will create a dynamic array to buffer the information written to the shift registers, it will be referred to as **Main Buffer**, **the Buffer** or **the Main**.  
+    * The action of sending the Buffer contents to the shift registers array will be reffered to as **Flushing**. Every time the Buffer is **flushed** to the shift registers array the whole contents of that array will be sent.  
+    * A secondary dynamic array will be created for delayed operations purposes, that buffer will be referred to as **Auxiliary Buffer** or **the Auxiliary**. The Auxiliary will be created every time it's needed and destroyed after it's temporary use becomes unnecessary. The Auxiliary will be used to allow several bit changing operations without the need of flushing the whole buffer for each bit change. The usual propper use of the mechanism will make all the bits changes that occur simultaneously to the Auxiliary Buffer and then **moving** the Auxiliary Buffer to the Main Buffer and flushing the Buffer. See moveAuxToMain() method for more information.    
     * 
     * @note There is no mechanism to flush the **Auxiliary** straight to the shift registers.  
     * 
@@ -138,7 +140,7 @@ public:
     * @brief Copies the Buffer content to the Auxiliary Buffer  
     * 
     * - If there's no existent Auxiliary the method creates it and copies the content of the Main.  
-    * - If there's an Auxiliary, the method will proceed according to the value passed in the parameter:  
+    * - If there's an Auxiliary, the method will proceed according to the value passed in the parameter overWriteIfExists:  
     * - If the parameter passed is true the Auxiliary contents will be overwritten with the Main contents.  
     * - If the parameter passed is false the Auxiliary will not be modified and the method will return a false to flag the failure of the operation.  
     * 
@@ -155,10 +157,10 @@ public:
     * The method will create a SRGXVPort object, a virtual port that will allow the user to manipulate a set of pins as a single entity, with it's pins numbered from 0 to pinsQty - 1, where pinsQty is the number of pins that compose the virtual port. 
     * 
     * @param strtPin ShiftRegGPIOXpander pin number from which the virtual port will start. The valid range is 0 <= strtPin <= getMaxSRGXPin().
-    * @param pinsQty Number of pins that will compose the virtual port. The valid range is 1 <= pinsQty <= (getMaxSRGXPin() - strtPin + 1).
+    * @param pinsQty Number of pins that will compose the virtual port. The valid range is 1 <= pinsQty <= 16
     * @return SRGXVPort The SRGXVPort object created, or an empty SRGXVPort object if the parameters provided were not valid.
     * 
-    * @attention Note that as described, the minimum amount of pins that can be set in a virtual port is 1, and the maximum amount of pins that can be set in a virtual port is equal to the number of shift registers multiplied by 8 minus the strtPin value, although using the maximum amount of pins available make no sense as the virtual port will be the same as the whole GPIOXpander object.  
+    * @attention Note that as described, the minimum amount of pins that can be set in a virtual port is 1, and the maximum amount of pins that can be set in a virtual port is equal to 16.  
     */
    SRGXVPort createSRGXVPort(const uint8_t &strtPin, const uint8_t &pinsQty);
    /**
@@ -206,7 +208,7 @@ public:
      * 
      * @return A boolean value indicating the success of the operation.
      * @retval true The operation was successful, the pin was toggled in the Main Buffer and the change was flushed to the GPIO pin.
-     * @retval false The operation failed, either because the pin number was beyond the implemented limit or because the mutexes could not be taken.
+     * @retval false The operation failed, because the pin number was beyond the implemented limit.
      */
    bool digitalToggleSr(const uint8_t &srPin);
    /**
@@ -217,8 +219,7 @@ public:
     * @attention As the values are written to the object's Buffer, the existence of the Auxiliary (by a deferred update digital output pin value setting), an inconsistency might appear if the pins to be written values are different in the Main from the Auxiliary. For ensuring data consistency  the method checks for the Auxiliary existence, if the Auxiliary exists a discardAux() will be performed before seting the new pin states.
     * 
     * @return A boolean value indicating the success of the operation.
-    * @retval true The operation was successful, all the pins were toggled in the Main Buffer and the change was flushed to the GPIO pins.
-    * @retval false The operation failed, because the mutexes could not be taken.
+    * @retval true Always, the operation was successful, all the pins were toggled in the Main Buffer and the change was flushed to the GPIO pins. The boolean return type is kept for versions compatibility.  
     */
    bool digitalToggleSrAll();
    /**
@@ -234,21 +235,21 @@ public:
     * 
     * @result A boolean value indicating the success of the operation.
     * @retval true The operation was successful, the pins were toggled in the Main Buffer and the change was flushed to the GPIO pins.
-    * @retval false The operation failed, either because the mask was null or because the mutexes could not be taken.
+    * @retval false The operation failed, because the mask was null.
     */
    bool digitalToggleSrMask(uint8_t* toggleMask);
    /**
     * @brief Toggles the state of a specific pin in the Auxiliary Buffer.
     * 
-    * @param srPin A positive value indicating which pin to toggle. The valid range is 0 <= srPin <= getMaxSRGXPin()  
+    * @param srPin A positive value indicating which pin to toggle. The valid range is 0 <= srPin <= getMaxSRGXPin().  
     * 
-    * @attention The pin modified in the Auxiliary will not be reflected on the pins of the GPIOXpander until the Auxiliary Buffer is copied into the Main Buffer and the latter one is flushed. This method main purpose is to modify more than one pin that must be modified at once and then proceed with the bool moveAuxToMain(bool).
+    * @attention The pin modified in the Auxiliary will not be reflected on the pins of the GPIOXpander until the Auxiliary Buffer is copied into the Main Buffer and the latter one is flushed. This method's main purpose is to modify more than one pin that must be modified at once and then proceed with the bool moveAuxToMain(bool).
     * 
     * @note An alternative procedure analog to the use of .print() and .println() methods is to invoke the several digitalToggleSrToAux() methods needed but the last, and then invoking a digitalToggleSr(const uint8_t) for the last pin writing. This last method will take care of moving the Auxiliary to the Main, set that last pin value and flush the Main Buffer.
     * 
     * @return A boolean value indicating the success of the operation.
     * @retval true The operation was successful, the pin was toggled in the Auxiliary Buffer.
-    * @retval false The operation failed, either because the pin number was beyond the implemented limit or because the mutexes could not be taken.
+    * @retval false The operation failed because the pin number was beyond the implemented limit.
     */
    bool digitalToggleSrToAux(const uint8_t &srPin); 
    /**
@@ -257,12 +258,12 @@ public:
    * @param srPin a positive value indicating which pin to set. The valid range is 0 <= srPin <= getMaxSRGXPin()  
    * @param value Value to set the indicated Pin.  
    * 
-   * @attention As the value is written to the object's Buffer, the existence of the Auxiliary (by a deferred update digital output pin value setting), an inconsistency might appear if the srPin to be written value is different in the Main from the Auxiliary. For ensuring data consistency  the method checks for the Auxiliary existence, if the Auxiliary exists a moveAuxToMain(false) will be performed before seting the new pin state.  
+   * @attention As the value is written to the object's Buffer, the existence of the Auxiliary (by a deferred update digital output pin value setting) might generate an  inconsistency if the srPin to be written value is different in the Main from the Auxiliary. For ensuring data consistency the method checks for the Auxiliary existence, if the Auxiliary exists a moveAuxToMain(false) will be performed before seting the new pin state.  
    * @warning If a moveAuxToMain(false) had to be executed, the Auxiliary will be destroyed. This will have no major consequences as every new need of the Auxiliary will automatically create a new instance of that buffer, but keep this concept in mind.  
    * 
    * @return A boolean value indicating the success of the operation.
    * @retval true The operation was successful, the pin was set in the Main Buffer and the change was flushed to the GPIO pin.
-   * @retval false The operation failed, either because the pin number was beyond the implemented limit or because the mutexes could not be taken.
+   * @retval false The operation failed because the pin number was beyond the implemented limit.
    */
    bool digitalWriteSr(const uint8_t &srPin, const uint8_t &value);
    /**
@@ -272,8 +273,8 @@ public:
    * @warning If discardAux() has to be executed, the Auxiliary will be destroyed. This will have no major consequences as every new need of the Auxiliary will automatically create a new instance of that buffer, but keep this concept in mind.  
    * 
    * @return A boolean value indicating the success of the operation.
-   * @retval true The operation was successful, all the pins were set to LOW in the Main Buffer and the change was flushed to the GPIO pins.
-   * @retval false The operation failed, because the mutexes could not be taken*/
+   * @retval true Always, the operation was successful, all the pins were set to LOW in the Main Buffer and the change was flushed to the GPIO pins. The boolean return type is kept for compatibility with other library versions.  
+   */
    bool digitalWriteSrAllReset();
    /**
    * @brief Sets all the pins to HIGH (0x01).
@@ -282,8 +283,7 @@ public:
    * @warning If discardAux() had to be executed, the Auxiliary will be destroyed. This will have no major consequences as every new need of the Auxiliary will automatically create a new instance of that buffer, but keep this concept in mind.  
    * 
    * @return A boolean value indicating the success of the operation.
-   * @retval true The operation was successful, all the pins were set to HIGH in the Main Buffer and the change was flushed to the GPIO pins.
-   * @retval false The operation failed, because the mutexes could not be taken.
+   * @retval true Always, the operation was successful, all the pins were set to HIGH in the Main Buffer and the change was flushed to the GPIO pins. The boolean return type is for compatibility with other library versions.  
    */
    bool digitalWriteSrAllSet();
   /**
@@ -301,7 +301,7 @@ public:
    * 
    * @return A boolean value indicating the success of the operation.
    * @retval true The operation was successful, the pins were reset in the Main Buffer and the change was flushed to the GPIO pins.
-   * @retval false The operation failed, either because the mask was null or because the mutexes could not be taken.
+   * @retval false The operation failed because the mask pointer was null.
    */
    bool digitalWriteSrMaskReset(uint8_t* resetMask);
    /**
@@ -319,22 +319,22 @@ public:
    * 
    * @return A boolean value indicating the success of the operation.
    * @retval true The operation was successful, the pins were set in the Main Buffer and the change was flushed to the GPIO pins.
-   * @retval false The operation failed, either because the mask was null or because the mutexes could not be taken.
+   * @retval false The operation failed because the mask pointer was null.
    */
    bool digitalWriteSrMaskSet(uint8_t* setMask);  
    /**
-   * @brief Set a specific pin to either HIGH (0x01) or LOW (0x00) in the Auxiliary Buffer
+   * @brief Set a specific pin to either HIGH (0x01) or LOW (0x00) in the Auxiliary Buffer.
    * 
    * @param srPin a positive value indicating which pin to set. The valid range is 0 <= srPin <= getMaxSRGXPin()
    * @param value Value to set for the indicated Pin.  
    * 
-   * @attention The pin modified in the Auxiliary will not be reflected on the pins of the GPIOXpander until the Auxiliary Buffer is copied into the Main Buffer and the latter one is flushed. This method main purpose is to modify more than one pin that must be modified at once and then proceed with the bool moveAuxToMain(bool).  
+   * @attention The pin modified in the Auxiliary will not be reflected on the pins of the GPIOXpander until the Auxiliary Buffer is copied into the Main Buffer and the latter one is flushed. This method main purpose is to modify several pins at once and then proceed with the bool moveAuxToMain(bool).  
    * 
    * @note An alternative procedure analog to the use of .print() and .println() methods is to invoke the several digitalWriteSrToAux() methods needed but the last, and then invoking a digitalWrite(const uint8_t, const uint8_t) for the last pin writing. This last method will take care of moving the Auxiliary to the Main, set that last pin value and flush the Main Buffer. 
    * 
    * @return A boolean value indicating the success of the operation.  
    * @retval true The operation was successful, the pin was set in the Auxiliary Buffer.
-   * @retval false The operation failed, either because the pin number was beyond the implemented limit or because the mutexes could not be taken. 
+   * @retval false The operation failed because the pin number was beyond the implemented limit. 
    */
    bool digitalWriteSrToAux(const uint8_t srPin, const uint8_t value);
    /**
@@ -343,8 +343,7 @@ public:
     * Discards the contents of the Auxiliary Buffer, frees the memory allocated to it and nullifies the corresponding memory pointer. If the Auxiliary Buffer was not created, the method will do nothing. If the Auxiliary is not transferred to the Main Buffer before invoking this method, the modified contents of the Auxiliary will be lost.  
     * 
     * @return A boolean value indicating the success of the operation.
-    * @retval true The Auxiliary Buffer was successfully discarded, and the memory allocated to it was freed.
-    * @retval false The mutexes could not be taken.
+    * @retval true Always, the Auxiliary Buffer was successfully discarded, and the memory allocated to it was freed. The boolean type return value is kept for library versions compatibility
     */
    bool discardAux();
    /**
@@ -389,6 +388,7 @@ public:
      * @return uint8_t The number of shift registers composing the physical port extender modeled by the class.  
      */
    uint8_t getSrQty();
+   //FFDR Keep checking from this point on
    /**
     * @brief Checks if the provided SRGXVPort object is valid.
     * 
@@ -523,7 +523,7 @@ private:
    (2^pinsQty) - 1, where pinsQty is the number of pins that compose the virtual port. 
    The value is used to enforce the range of valid values. */
    uint16_t _vportMaxVal{0};
-   bool _begun{false}; // Flag to indicate if the virtual port has been begun, i.e. if the begin() method has been called and the initial state of the virtual port has been set.
+   // bool _begun{false}; // Flag to indicate if the virtual port has been begun, i.e. if the begin() method has been called and the initial state of the virtual port has been set.
    bool _buildSRGXVPortMsk(uint8_t* &maskPtr);
 
 protected:
