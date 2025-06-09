@@ -33,12 +33,18 @@
    uint8_t ds{10};
    uint8_t sh_cp{12};
    uint8_t st_cp{11};
-   uint8_t srQty{1};
-   
-   uint8_t strtngVals [1] {0b01010101};
+   uint8_t srQty{4};
+
+   uint8_t strtngVals [4] {0x00, 0x00,0x00,0x00};
    uint8_t* stVlsPtr = strtngVals;
 
-   ShiftRegGPIOXpander mySrgx(ds, sh_cp, st_cp, srQty);
+uint8_t mask_1 [] {0b10001000, 0b00100010, 0b00110011, 0b01110111};
+uint8_t mask_2 [] {0b01010101, 0b01010101, 0b01010101, 0b01010101};
+
+uint8_t pinUpdtd{0};
+uint8_t setVal{};
+
+ShiftRegGPIOXpander mySrgx(ds, sh_cp, st_cp, srQty);
 
 void setup() {
    Serial.begin(9600);
@@ -55,69 +61,93 @@ regular development.
 */
 
 void loop() {
+   Serial.println("Example starts");
+   Serial.println("--------------");
 
-   {
-      Serial.println("\nFlip every pin state using .digitalToggleSr()/.flipBit()");
-      Serial.println("========================================================");
-      delay(500);
-      for(uint8_t i{0}; i <= mySrgx.getMaxSRGXPin(); i++){
-         mySrgx.digitalToggleSr(i);
-         delay(1500);
-      }
-      delay(3000);
+   Serial.println("digitalWriteSrAllSet() method rises all pins");
+   mySrgx.digitalWriteSrAllSet();
+   delay(1000);
+
+   Serial.println("digitalWriteSrAllReset() method clears all pins");
+   mySrgx.digitalWriteSrAllReset();
+   delay(1000);
+
+   Serial.println("digitalWriteSr() method writing HIGH pin by pin");
+   setVal = HIGH;
+   for(uint8_t pinNum{0}; pinNum <= mySrgx.getMaxSRGXPin(); pinNum++){
+      mySrgx.digitalWriteSr(pinNum, setVal);
+      delay(200);
    }
 
-   {
-      Serial.println("\nSET every pin using .digitalWriteSr()/.setBit()");
-      Serial.println("===============================================");
-
-      for(uint8_t i{0}; i <= mySrgx.getMaxSRGXPin(); i++){
-         mySrgx.digitalWriteSr(i, HIGH);
-         delay(1500);
-      }
-      delay(3000);
+   Serial.println("digitalWriteSr() method writing LOW pin by pin");
+   setVal = LOW;
+   for(uint8_t pinNum{0}; pinNum <= mySrgx.getMaxSRGXPin(); pinNum++){
+      mySrgx.digitalWriteSr(pinNum, setVal);
+      delay(200);
    }
+   delay(1000);
 
-   {
-      Serial.println("\nRESET every pin using .digitalWriteSr()/.setBit()");
-      Serial.println("=================================================");
-
-      for(uint8_t i{0}; i <= mySrgx.getMaxSRGXPin(); i++){
-         mySrgx.digitalWriteSr(i, LOW);
-         delay(1500);
-      }
-      delay(3000);
+   Serial.println("digitalWriteSrToAux() method writing TO THE BUFFER HIGH pin by pin and 'move & flush automatic' every 3rd pin ");
+   setVal = HIGH;
+   for(uint8_t pinNum{0}; pinNum <= mySrgx.getMaxSRGXPin(); pinNum++){
+      if((pinNum+1) % 3 != 0)
+         mySrgx.digitalWriteSrToAux(pinNum, setVal);
+      else
+         mySrgx.digitalWriteSr(pinNum, setVal);
+      delay(200);
    }
+   mySrgx.moveAuxToMain();
+   delay(1000);
 
-   {
-      Serial.println("\nSET ALL pins at once using .digitalWriteSrAllSet()");
-      Serial.println("==================================================");
-
-      mySrgx.digitalWriteSrAllSet();
-      delay(3000);
+   Serial.println("digitalWriteSrToAux() method writing TO THE BUFFER LOW pin by pin and 'move & flush automatic' every 4th pin");
+   setVal = LOW;
+   for(uint8_t pinNum{0}; pinNum <= mySrgx.getMaxSRGXPin(); pinNum++){
+      if((pinNum+1) % 4 != 0)
+         mySrgx.digitalWriteSrToAux(pinNum, setVal);
+      else
+         mySrgx.digitalWriteSr(pinNum, setVal);
+      delay(200);
    }
+   mySrgx.moveAuxToMain();
+   delay(1000);
 
-   {
-      Serial.println("\nRESET ALL pins at once using digitalWriteSrAllReset()");
-      Serial.println("=====================================================");
+   Serial.println("digitalWriteSrMaskSet() method sets pins using the mask {0b10001000, 0b00100010, 0b00110011, 0b01110111}");
+   mySrgx.digitalWriteSrMaskSet(mask_1);
+   delay(5000);
 
-      mySrgx.digitalWriteSrAllReset();
-      delay(3000);
-   }
+   Serial.println("digitalWriteSrMaskReset() method resets pins using the mask {0b01010101, 0b01010101, 0b01010101, 0b01010101}");
+   mySrgx.digitalWriteSrMaskReset(mask_2);
+   delay(5000);
 
-   {
-      Serial.println("\nSET the 2 first and 2 last pins at the Auxiliar");
-      Serial.println("================================================");
+   Serial.println("digitalWriteSrAllReset() method clears all pins");
+   mySrgx.digitalWriteSrAllReset();
+   delay(2000);
 
-      mySrgx.digitalWriteSrToAux(0, HIGH);
-      mySrgx.digitalWriteSrToAux(1, HIGH);
-      mySrgx.digitalWriteSrToAux(6, HIGH);
-      mySrgx.digitalWriteSrToAux(7, HIGH);
-      delay(1000);
-      Serial.println("\nNow we move the Auxiliar to the Main .moveAuxToMain()");
-      Serial.println("========================================================================");
-      mySrgx.moveAuxToMain();
-      delay(3000);
-   }
+   Serial.println("stampOverMain() method overwrites the Main Buffer with the value {0b01010101, 0b01010101, 0b01010101, 0b01010101}");
+   mySrgx.stampOverMain(mask_2);
+   delay(5000);
 
+   Serial.println("digitalWriteSrAllReset() method clears all pins before restarting tests");
+   Serial.println("-----------------------------------------------------------------------");
+   mySrgx.digitalWriteSrAllReset();
+   delay(3000);
 }
+
+//================================================>> General use functions BEGIN
+//==================================================>> General use functions END
+
+//=======================================>> User Functions Implementations BEGIN
+ /**
+  * @brief Error Handling function
+  * 
+  * Placeholder for a Error Handling function, in case of an error the execution
+  * will be trapped in this endless loop
+  */
+ void Error_Handler(){
+   for(;;)
+   {    
+   }
+   
+   return;
+ }
+//=========================================>> User Functions Implementations END

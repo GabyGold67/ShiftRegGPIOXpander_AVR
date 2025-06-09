@@ -30,20 +30,44 @@
 #include <Arduino.h>
 #include <ShiftRegGPIOXpander_AVR.h>
 
-   uint8_t ds{10};
-   uint8_t sh_cp{12};
-   uint8_t st_cp{11};
-   uint8_t srQty{1};
-   
-   uint8_t strtngVals [1] {0b01010101};
-   uint8_t* stVlsPtr = strtngVals;
+//======================================>> General use function prototypes BEGIN
+void Error_Handler(int8_t errorCode); /*!<Error Handler function prototype, to be implemented by the user*/
+//========================================>> General use function prototypes END
 
-   ShiftRegGPIOXpander mySrgx(ds, sh_cp, st_cp, srQty);
+/*Constants for pin based methods*/
+const uint16_t redPin{0x00}; // Red light pin
+const uint16_t yellowPin{0x01}; // Yellow light pin
+const uint16_t greenPin{0x02}; // Green light pin
+
+/*Constants for mask based methods*/
+const uint16_t redMsk{0x01 << redPin}; // Red light
+const uint16_t yellowMsk{0x01 << yellowPin}; // Yellow light
+const uint16_t greenMsk{0x01 << greenPin}; // Green light
+
+uint8_t ds{10};
+uint8_t sh_cp{12};
+uint8_t st_cp{11};
+uint8_t srQty{1};
+
+uint8_t SRGXstrtngVal [1] {0x00};
+uint16_t portStrtngVal{0x0000}; 
+
+ShiftRegGPIOXpander mySrgx(ds, sh_cp, st_cp, srQty);
+SRGXVPort myVPortNS = mySrgx.createSRGXVPort(0, 3);
+SRGXVPort myVPortEW = mySrgx.createSRGXVPort(4, 3);
 
 void setup() {
    Serial.begin(9600);
 
-   mySrgx.begin(stVlsPtr);
+   mySrgx.begin(SRGXstrtngVal); 
+
+   if(!(mySrgx.isValid(myVPortNS)))
+      Error_Handler(0x02); // Error creating the virtual port, exit the task
+   myVPortNS.begin(0x00);
+
+   if(!(mySrgx.isValid(myVPortEW)))
+      Error_Handler(0x03); // Error creating the virtual port, exit the task
+   myVPortEW.begin(0x00);
 }
 
 /*
@@ -55,6 +79,48 @@ regular development.
 */
 
 void loop() {
+   {
+      Serial.println("Set the ports pins to the first traffic lights state");
+      myVPortNS.writePort(redMsk); 
+      myVPortEW.writePort(greenMsk);
+      delay(3000);
+   }
 
+   {
+      Serial.println("Set the ports pins to the second traffic lights state");
+      // myVPortNS.writePort(redMsk); 
+      myVPortEW.writePort(yellowMsk);
+      delay(1500);
+   }
 
+   {
+      Serial.println("Set the ports pins to the third traffic lights state");
+      myVPortNS.writePort(greenMsk); 
+      myVPortEW.writePort(redMsk);
+      delay(3000);
+   }
+
+   {
+      Serial.println("Set the ports pins to the fourth traffic lights state");
+      myVPortNS.writePort(yellowMsk); 
+      // myVPortEW.writePort(redMsk);
+      delay(1500);
+   }
 }
+
+//=======================================>> User Functions Implementations BEGIN
+ /**
+  * @brief Error Handling function
+  * 
+  * Placeholder for a Error Handling function, in case of an error the execution
+  * will be trapped in this endless loop
+  */
+ void Error_Handler(int8_t errorCode){
+   Serial.println("Error Handler called with error code: " + String(errorCode));
+   for(;;)
+   {    
+   }
+   
+   return;
+ }
+//=========================================>> User Functions Implementations END
