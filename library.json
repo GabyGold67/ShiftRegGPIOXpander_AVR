@@ -1,0 +1,30 @@
+{
+    "name": "ShiftRegGPIOXpander_AVR",
+    "version": "3.0.0",
+    
+    "description": "Simplifies extending GPIO outputs by usage of simple and economic shift registers (SIPO shift registers), designed for the 74HCx595. The library takes care of keeping the shift register output pins updated transparently to the user by implementing an API analog to the Arduino digitalRead() and digitalWrite() functions (and adding a digitalToggle()-kind method as present in other platforms). In addition an extended API adds methods to manipulate one or several pins outputs simultaneously: set or reset all the pins in a single call, set or reset pins through a bitmask, etc. The library provides a mechanism to create 'virtual ports' that can handle a subset of contiguous pins, allowing the user to treat them as a single entity, for 1 to 16 pins long segments.",
+    "keywords": "GPIO, expansion, expander, extender, 74HC595, shift register, SIPO, outputs, output pins, virtual ports, Arduino, out of pins",    
+    
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/GabyGold67/ShiftRegGPIOXpander_AVR"
+    },
+    "authors":
+    [
+      {
+        "name": "Gabriel D. Goldman",
+        "email": "gdgoldman67@hotmail.com",
+        "url": "https://github.com/GabyGold67",
+        "maintainer": true
+      }
+    ],
+
+    "license": "GPL-3.0-or-later",
+    "homepage": "https://www.gnu.org/licenses/gpl-3.0-standalone.html",
+    "dependencies":
+    [
+    ] ,
+    "frameworks": "Arduino",
+    "platforms": "*"
+  }
