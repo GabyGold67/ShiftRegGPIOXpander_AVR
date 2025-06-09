@@ -1,0 +1,9 @@
+<map id="SRGXVPort::readPort" name="SRGXVPort::readPort">
+<area shape="rect" id="Node000001" title="Reads the state of the virtual port as an unsigned integer value." alt="" coords="5,13,155,40"/>
+<area shape="rect" id="Node000002" href="$class_shift_reg_g_p_i_o_xpander.html#a184e452056ea5b1fb11afacb8acfc23b" title="Returns a 16&#45;bits value containing a zero&#45;based segment of the Main Buffer." alt="" coords="203,5,356,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="155,24,187,24,187,29,155,29"/>
+<area shape="rect" id="Node000003" href="$class_shift_reg_g_p_i_o_xpander.html#a5b1b5425acdf923e13c75c7ae47c4a7c" title="Moves the data in the Auxiliary to the Main." alt="" coords="404,5,557,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="356,24,389,24,389,29,356,29"/>
+<area shape="rect" id="Node000004" href="$class_shift_reg_g_p_i_o_xpander.html#add3b6fc39542cec1b278cdad9222d3aa" title="Deletes the Auxiliary Buffer." alt="" coords="605,5,759,48"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="558,24,590,24,590,29,558,29"/>
+</map>

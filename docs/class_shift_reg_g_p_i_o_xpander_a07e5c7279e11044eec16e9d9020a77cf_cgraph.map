@@ -1,0 +1,5 @@
+<map id="ShiftRegGPIOXpander::stampOverMain" name="ShiftRegGPIOXpander::stampOverMain">
+<area shape="rect" id="Node000001" title="Sets all of the output pins of the shift register to new provided values at once." alt="" coords="5,5,159,48"/>
+<area shape="rect" id="Node000002" href="$class_shift_reg_g_p_i_o_xpander.html#add3b6fc39542cec1b278cdad9222d3aa" title="Deletes the Auxiliary Buffer." alt="" coords="207,5,360,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="159,24,191,24,191,29,159,29"/>
+</map>

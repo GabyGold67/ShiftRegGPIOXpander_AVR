@@ -1,0 +1,39 @@
+<map id="ShiftRegGPIOXpander::discardAux" name="ShiftRegGPIOXpander::discardAux">
+<area shape="rect" id="Node000001" title="Deletes the Auxiliary Buffer." alt="" coords="632,272,786,315"/>
+<area shape="rect" id="Node000002" href="$class_shift_reg_g_p_i_o_xpander.html#aa62e8f2011a07ecddd83d5f72df4c291" title="Sets all the pins to LOW (0x00/Reset)." alt="" coords="428,172,584,215"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="655,267,583,229,559,218,561,213,586,224,657,262"/>
+<area shape="rect" id="Node000003" href="$class_shift_reg_g_p_i_o_xpander.html#a72de570d1e6827c9f1dfb671c5d946be" title="Sets all the pins to HIGH (0x01)." alt="" coords="430,239,583,281"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="617,281,583,275,584,270,618,276"/>
+<area shape="rect" id="Node000004" href="$class_shift_reg_g_p_i_o_xpander.html#a5b1b5425acdf923e13c75c7ae47c4a7c" title="Moves the data in the Auxiliary to the Main." alt="" coords="430,305,583,348"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="618,311,584,317,583,311,617,306"/>
+<area shape="rect" id="Node000019" href="$class_shift_reg_g_p_i_o_xpander.html#a07e5c7279e11044eec16e9d9020a77cf" title="Sets all of the output pins of the shift register to new provided values at once." alt="" coords="430,372,583,415"/>
+<area shape="poly" id="edge18_Node000001_Node000019" title=" " alt="" coords="657,325,586,362,561,374,559,369,583,358,655,320"/>
+<area shape="rect" id="Node000005" href="$class_shift_reg_g_p_i_o_xpander.html#a184e452056ea5b1fb11afacb8acfc23b" title="Returns a 16&#45;bits value containing a zero&#45;based segment of the Main Buffer." alt="" coords="217,5,370,48"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="427,297,426,295,407,264,399,234,399,205,402,176,405,148,404,119,396,91,378,62,365,50,369,47,382,58,401,89,410,119,410,148,407,176,404,205,405,233,412,262,430,292,431,293"/>
+<area shape="rect" id="Node000007" href="$class_shift_reg_g_p_i_o_xpander.html#ad0a3e91286d39a4c9622b1382febf4cb" title="Returns the state of the requested pin." alt="" coords="217,72,370,115"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="428,297,426,295,411,273,404,251,402,210,400,169,393,149,378,128,365,117,368,113,382,125,397,147,405,168,407,210,409,250,416,271,430,292,432,294"/>
+<area shape="rect" id="Node000008" href="$class_shift_reg_g_p_i_o_xpander.html#a4a517bdf7225c90b2cb03ee8411d89d4" title="Toggles the state of a specific pin." alt="" coords="217,139,370,181"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="429,298,426,295,408,269,402,244,395,219,378,195,363,184,366,180,382,191,400,217,407,242,413,267,430,292,433,294"/>
+<area shape="rect" id="Node000010" href="$class_shift_reg_g_p_i_o_xpander.html#aa0f8d20d721798dd2fbf8ca6bcd9b72f" title="Toggles the state of all the pins." alt="" coords="217,205,370,248"/>
+<area shape="poly" id="edge9_Node000004_Node000010" title=" " alt="" coords="436,300,427,296,403,279,379,262,355,251,357,246,381,258,406,274,429,291,438,296"/>
+<area shape="rect" id="Node000011" href="$class_shift_reg_g_p_i_o_xpander.html#a8fa463061fbfe427c32989d1de5f223e" title="Toggles the state of the pins in the Main Buffer according to the provided mask." alt="" coords="217,272,370,315"/>
+<area shape="poly" id="edge10_Node000004_Node000011" title=" " alt="" coords="414,315,370,308,371,303,414,310"/>
+<area shape="rect" id="Node000012" href="$class_shift_reg_g_p_i_o_xpander.html#a650d0f6589b37aefb2f7fb009619da2f" title="Set a specific pin to either HIGH (0x01) or LOW (0x00)." alt="" coords="217,339,370,381"/>
+<area shape="poly" id="edge11_Node000004_Node000012" title=" " alt="" coords="414,344,371,351,370,345,414,338"/>
+<area shape="rect" id="Node000015" href="$class_shift_reg_g_p_i_o_xpander.html#ae1bb2e62d05b98d61dc7656ceefc8d63" title="Modifies the Main buffer contents by resetting simultaneously certain pins." alt="" coords="207,405,380,448"/>
+<area shape="poly" id="edge14_Node000004_Node000015" title=" " alt="" coords="438,358,429,362,406,379,381,396,357,407,355,402,379,391,403,375,427,358,436,353"/>
+<area shape="rect" id="Node000016" href="$class_shift_reg_g_p_i_o_xpander.html#a08f08f74efdbbff4495bb358d5c6fba4" title="Modifies the Main buffer contents by setting simultaneously certain pins." alt="" coords="214,472,372,515"/>
+<area shape="poly" id="edge15_Node000004_Node000016" title=" " alt="" coords="433,359,430,362,413,386,407,411,400,436,382,462,366,474,363,469,378,458,395,434,402,410,408,384,426,358,429,355"/>
+<area shape="rect" id="Node000017" href="$class_shift_reg_g_p_i_o_xpander.html#a80480ab756fbeaa76658aadb7e9d9dee" title="Sets the value of several pins, scattered or contiguous, in the Main Buffer, according to the provide..." alt="" coords="217,539,370,581"/>
+<area shape="poly" id="edge16_Node000004_Node000017" title=" " alt="" coords="432,360,430,362,416,383,409,403,407,444,405,485,397,507,382,528,368,540,365,536,378,525,393,504,400,484,402,444,404,402,411,380,426,358,428,356"/>
+<area shape="rect" id="Node000018" href="$class_shift_reg_g_p_i_o_xpander.html#a6c1c01fb3d0195358ca0c9868f9ac122" title="Sets the value of a number of consecutive pins (the segment) in the Main Buffer." alt="" coords="214,605,373,648"/>
+<area shape="poly" id="edge17_Node000004_Node000018" title=" " alt="" coords="431,360,430,362,412,391,405,420,404,448,407,477,410,505,410,535,401,565,382,595,369,607,365,603,378,592,396,562,404,534,405,506,402,477,399,449,399,419,407,389,426,358,427,357"/>
+<area shape="rect" id="Node000006" href="$class_s_r_g_x_v_port.html#a95da7b2c72d85ae9ffb91c906b446836" title="Reads the state of the virtual port as an unsigned integer value." alt="" coords="7,13,157,40"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="201,29,157,29,157,24,201,24"/>
+<area shape="rect" id="Node000009" href="$class_shift_reg_g_p_i_o_xpander.html#aa5f62b5b35dba66d8ff3616746111f68" title="Toggles the state of a specific pin in the Main Buffer." alt="" coords="5,139,159,181"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="201,163,159,163,159,157,201,157"/>
+<area shape="rect" id="Node000013" href="$class_shift_reg_g_p_i_o_xpander.html#a1589457b53bda15c73cb00b6d0c66b1c" title="Sets a specific pin to LOW (0x00/Reset) in the Main Buffer." alt="" coords="5,305,159,348"/>
+<area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="201,348,159,341,160,336,202,343"/>
+<area shape="rect" id="Node000014" href="$class_shift_reg_g_p_i_o_xpander.html#a55d9c0be46f84bf329fe930d929638bc" title="Sets a specific pin to HIGH (0x01/Set) in the Main Buffer." alt="" coords="5,372,159,415"/>
+<area shape="poly" id="edge13_Node000012_Node000014" title=" " alt="" coords="202,377,160,384,159,379,201,372"/>
+</map>
