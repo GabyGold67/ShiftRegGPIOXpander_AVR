@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file	: SRGX_AVR_Example_01.ino
+  * @file	: SRGX_AVR_Example_02.ino
   * @brief  : Code example of the use of the ShiftRegGPIOXpander_AVR library
   * 
   * Repository: https://github.com/GabyGold67/ShiftRegGPIOXpander_AVR

@@ -634,7 +634,6 @@ public:
     * @return false The pin was not in the valid range, and no action was taken.
     */
    bool setBit(const uint8_t &srPin);
-   //FFDR Keep checking from this point on
    /**
     * @brief Sets the state of the pins composing the SRGXVPort in the Main Buffer (i.e. the GPIOXpander pins) according to the provided value.
     * 
