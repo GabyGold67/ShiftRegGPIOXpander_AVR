@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['end_0',['end',['../class_shift_reg_g_p_i_o_xpander.html#ad59357b65580f123685eff4ce6c6b049',1,'ShiftRegGPIOXpander']]],
-  ['expander_20library_20shiftreggpioxpander_5favr_1',['GPIO Digital Outputs Expander Library (ShiftRegGPIOXpander_AVR)',['../C:/Users/DevPadawan/Documents/My Projects/Training Projects/LibsDev_AVR/lib/ShiftRegGPIOXpander_AVR/README.md#gpio-digital-outputs-expander-library-shiftreggpioxpander_avr',1,'']]]
+  ['flipbit_0',['flipBit',['../class_shift_reg_g_p_i_o_xpander.html#aa5f62b5b35dba66d8ff3616746111f68',1,'ShiftRegGPIOXpander::flipBit()'],['../class_s_r_g_x_v_port.html#a57373de85b3d808601706f111a8df49c',1,'SRGXVPort::flipBit()']]]
 ];

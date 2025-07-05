@@ -1,0 +1,9 @@
+<map id="ShiftRegGPIOXpander::digitalRead" name="ShiftRegGPIOXpander::digitalRead">
+<area shape="rect" id="Node000001" title="Returns the state of the requested pin of the ShiftRegGPIOXpander." alt="" coords="5,5,159,48"/>
+<area shape="rect" id="Node000002" href="$class_shift_reg_g_p_i_o_xpander.html#ad0a3e91286d39a4c9622b1382febf4cb" title="Returns the state of the requested pin." alt="" coords="207,5,360,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="159,24,191,24,191,29,159,29"/>
+<area shape="rect" id="Node000003" href="$class_shift_reg_g_p_i_o_xpander.html#a5b1b5425acdf923e13c75c7ae47c4a7c" title="Moves the data in the Auxiliary to the Main." alt="" coords="408,5,561,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="360,24,393,24,393,29,360,29"/>
+<area shape="rect" id="Node000004" href="$class_shift_reg_g_p_i_o_xpander.html#add3b6fc39542cec1b278cdad9222d3aa" title="Deletes the Auxiliary Buffer." alt="" coords="609,5,763,48"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="562,24,594,24,594,29,562,29"/>
+</map>
