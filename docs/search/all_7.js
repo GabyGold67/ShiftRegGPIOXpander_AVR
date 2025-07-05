@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['here_0',['&lt;a href=&quot;https://gabygold67.github.io/ShiftRegGPIOXpander_AVR/&quot;&gt;Complete library documentation HERE!&lt;/a&gt;',['../C:/Users/DevPadawan/Documents/My Projects/Training Projects/LibsDev_AVR/lib/ShiftRegGPIOXpander_AVR/README.md#complete-library-documentation-herehttpsgabygold67githubioshiftreggpioxpander_avr',1,'']]]
+  ['moveauxtomain_0',['moveAuxToMain',['../class_shift_reg_g_p_i_o_xpander.html#a5b1b5425acdf923e13c75c7ae47c4a7c',1,'ShiftRegGPIOXpander']]]
 ];

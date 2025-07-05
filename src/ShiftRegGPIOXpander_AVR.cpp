@@ -12,10 +12,10 @@
  * mail <gdgoldman67@hotmail.com>  
  * Github <https://github.com/GabyGold67>  
  * 
- * @version 3.0.0
+ * @version 3.1.0
  * 
  * @date First release: 12/02/2025  
- *       Last update:   08/06/2025 18:40 (GMT+0200) DST  
+ *       Last update:   05/07/2025 21:20 (GMT+0200) DST  
  * 
  * @copyright Copyright (c) 2025  GPL-3.0 license
  *******************************************************************************
@@ -67,9 +67,9 @@ ShiftRegGPIOXpander::~ShiftRegGPIOXpander(){
 bool ShiftRegGPIOXpander::begin(uint8_t* initCntnt){
    bool result{true};
 
-   digitalWrite(_sh_cp, HIGH);
-   digitalWrite(_ds, LOW);
-   digitalWrite(_st_cp, HIGH);
+   ::digitalWrite(_sh_cp, HIGH);
+   ::digitalWrite(_ds, LOW);
+   ::digitalWrite(_st_cp, HIGH);
    pinMode(_sh_cp, OUTPUT);
    pinMode(_ds, OUTPUT);
    pinMode(_st_cp, OUTPUT);
@@ -100,6 +100,20 @@ SRGXVPort ShiftRegGPIOXpander::createSRGXVPort(const uint8_t &strtPin, const uin
       return SRGXVPort(this, strtPin, pinsQty);
    else
       return SRGXVPort();
+}
+
+int ShiftRegGPIOXpander::digitalRead(const uint8_t &srPin){
+   int result {-1};
+
+   if((srPin >= 0) && (srPin <= _maxSRGXPin)){
+      result = digitalReadSr(srPin);
+      if(result == 0x00)
+         result = LOW;  
+      else if(result == 0x01)
+         result = HIGH;
+   }
+
+   return result;
 }
 
 bool ShiftRegGPIOXpander::digitalReadSgmntSr(const uint8_t &strtPin, const uint8_t &pinsQty, uint16_t &bffrSgmnt){
@@ -187,6 +201,12 @@ bool ShiftRegGPIOXpander::digitalToggleSrToAux(const uint8_t &srPin){
    }
 
    return result;
+}
+
+void ShiftRegGPIOXpander::digitalWrite(const uint8_t &srPin, const uint8_t &value){
+   digitalWriteSr(srPin, value);
+
+   return;
 }
 
 bool ShiftRegGPIOXpander::digitalWriteSr(const uint8_t &srPin, const uint8_t &value){
@@ -352,12 +372,12 @@ bool ShiftRegGPIOXpander::_sendAllSRCntnt(){
    bool result{false};
 
    if((_srQty > 0) && (_mainBuffrArryPtr != nullptr)){
-      digitalWrite(_st_cp, LOW); // Start of access to the shift register internal buffer to write -> Lower the latch pin
+      ::digitalWrite(_st_cp, LOW); // Start of access to the shift register internal buffer to write -> Lower the latch pin
       for(int srBuffDsplcPtr{_srQty - 1}; srBuffDsplcPtr >= 0; srBuffDsplcPtr--){
          curSRcntnt = *(_mainBuffrArryPtr + srBuffDsplcPtr);
          result = _sendSnglSRCntnt(curSRcntnt);
       }
-      digitalWrite(_st_cp, HIGH);   // End of access to the shift register internal buffer, copy the buffer values to the output pins -> Lower the latch pin
+      ::digitalWrite(_st_cp, HIGH);   // End of access to the shift register internal buffer, copy the buffer values to the output pins -> Lower the latch pin
       result = true;
    }
 
@@ -369,8 +389,8 @@ bool ShiftRegGPIOXpander::_sendSnglSRCntnt(const uint8_t &data){
    bool result{true};
 
    for (int bitPos {7}; bitPos >= 0; bitPos--){   //Send each of the bits corresponding to one 8-bits shift register module
-      digitalWrite(_sh_cp, LOW); // Start of next bit value addition to the shift register internal buffer -> Lower the clock pin         
-      digitalWrite(_ds, (data & mask)?HIGH:LOW);
+      ::digitalWrite(_sh_cp, LOW); // Start of next bit value addition to the shift register internal buffer -> Lower the clock pin         
+      ::digitalWrite(_ds, (data & mask)?HIGH:LOW);
       mask >>= 1; // Shift the mask to the right to get the next bit value
       delayMicroseconds(10);  // Time required by the 74HCx595 to modify the SH_CP line by datasheet
       /* 
@@ -378,7 +398,7 @@ bool ShiftRegGPIOXpander::_sendSnglSRCntnt(const uint8_t &data){
          uint64_t micros = esp_timer_get_time();
          while((esp_timer_get_time() - micros) < 10){}; // Wait for the time required by the 74HCx595 to modify the SH_CP line by datasheet
       */
-      digitalWrite(_sh_cp, HIGH);   // End of next bit value addition to the shift register internal buffer -> Lower the clock pin      
+      ::digitalWrite(_sh_cp, HIGH);   // End of next bit value addition to the shift register internal buffer -> Lower the clock pin      
    }
 
    return result;
@@ -520,6 +540,20 @@ bool SRGXVPort::_buildSRGXVPortMsk(uint8_t* &maskPtr){
    return result;    
 }
 
+int SRGXVPort::digitalRead(const uint8_t &srPin){
+   int result {-1};
+
+   if((srPin >= 0) && (srPin <= _pinsQty - 1)){
+      result = digitalReadSr(srPin);
+      if(result == 0x00)
+         result = LOW;  
+      else if(result == 0x01)
+         result = HIGH;
+   }
+
+   return result;
+}
+
 uint8_t SRGXVPort::digitalReadSr(const uint8_t &srPin){
    uint8_t result{0xFF};
 
@@ -530,6 +564,12 @@ uint8_t SRGXVPort::digitalReadSr(const uint8_t &srPin){
    }
 
    return result; // Return an invalid value if the pin is out of range   
+}
+
+void SRGXVPort::digitalWrite(const uint8_t &srPin, const uint8_t &value){
+   digitalWriteSr(srPin, value);
+
+   return;
 }
 
 bool SRGXVPort::digitalWriteSr(const uint8_t &srPin, const uint8_t &value){
