@@ -14,7 +14,7 @@
   * Github <https://github.com/GabyGold67>
   *
   * @date First release: 16/02/2025 
-  *       Last update:   06/06/2025 11:10 GMT+0200 DST
+  *       Last update:   05/07/2025 21:50 GMT+0200 DST
   ******************************************************************************
   * @warning **Use of this library is under your own responsibility**
   * 
@@ -72,17 +72,17 @@ void loop() {
    mySrgx.digitalWriteSrAllReset();
    delay(1000);
 
-   Serial.println("digitalWriteSr() method writing HIGH pin by pin");
+   Serial.println("digitalWrite() method writing HIGH pin by pin");
    setVal = HIGH;
    for(uint8_t pinNum{0}; pinNum <= mySrgx.getMaxSRGXPin(); pinNum++){
-      mySrgx.digitalWriteSr(pinNum, setVal);
+      mySrgx.digitalWrite(pinNum, setVal);
       delay(200);
    }
 
-   Serial.println("digitalWriteSr() method writing LOW pin by pin");
+   Serial.println("digitalWrite() method writing LOW pin by pin");
    setVal = LOW;
    for(uint8_t pinNum{0}; pinNum <= mySrgx.getMaxSRGXPin(); pinNum++){
-      mySrgx.digitalWriteSr(pinNum, setVal);
+      mySrgx.digitalWrite(pinNum, setVal);
       delay(200);
    }
    delay(1000);
@@ -93,7 +93,7 @@ void loop() {
       if((pinNum+1) % 3 != 0)
          mySrgx.digitalWriteSrToAux(pinNum, setVal);
       else
-         mySrgx.digitalWriteSr(pinNum, setVal);
+         mySrgx.digitalWrite(pinNum, setVal);
       delay(200);
    }
    mySrgx.moveAuxToMain();
@@ -105,7 +105,7 @@ void loop() {
       if((pinNum+1) % 4 != 0)
          mySrgx.digitalWriteSrToAux(pinNum, setVal);
       else
-         mySrgx.digitalWriteSr(pinNum, setVal);
+         mySrgx.digitalWrite(pinNum, setVal);
       delay(200);
    }
    mySrgx.moveAuxToMain();

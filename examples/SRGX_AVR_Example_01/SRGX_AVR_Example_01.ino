@@ -14,7 +14,7 @@
   * Github <https://github.com/GabyGold67>
   *
   * @date First release: 16/02/2025 
-  *       Last update:   06/06/2025 11:10 GMT+0200 DST
+  *       Last update:   05/07/2025 21:40 GMT+0200 DST
   ******************************************************************************
   * @warning **Use of this library is under your own responsibility**
   * 
@@ -68,22 +68,22 @@ void loop() {
    }
 
    {
-      Serial.println("\nSET every pin using .digitalWriteSr()/.setBit()");
+      Serial.println("\nSET every pin using .digitalWrite()/.setBit()");
       Serial.println("===============================================");
 
       for(uint8_t i{0}; i <= mySrgx.getMaxSRGXPin(); i++){
-         mySrgx.digitalWriteSr(i, HIGH);
+         mySrgx.digitalWrite(i, HIGH);
          delay(1500);
       }
       delay(3000);
    }
 
    {
-      Serial.println("\nRESET every pin using .digitalWriteSr()/.setBit()");
+      Serial.println("\nRESET every pin using .digitalWriter()/.setBit()");
       Serial.println("=================================================");
 
       for(uint8_t i{0}; i <= mySrgx.getMaxSRGXPin(); i++){
-         mySrgx.digitalWriteSr(i, LOW);
+         mySrgx.digitalWrite(i, LOW);
          delay(1500);
       }
       delay(3000);
